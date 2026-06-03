@@ -1,10 +1,3 @@
-//
-//  MarkdownToolApp.swift
-//  MarkdownTool
-//
-//  Created by Oczachowski Sebastian on 02.06.2026.
-//
-
 import SwiftUI
 
 @main
@@ -13,5 +6,7 @@ struct MarkdownToolApp: App {
         WindowGroup {
             ContentView()
         }
+        .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 1200, height: 800)
     }
 }
