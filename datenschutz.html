@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datenschutz — MarkdownTool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:         #0C1526;
+      --surface:    #142038;
+      --surface2:   #1A2B4A;
+      --blue:       #3B5BDB;
+      --blue-light: #5B7CF7;
+      --accent:     #63B3ED;
+      --white:      #EEF2FF;
+      --muted:      #6D8AB5;
+      --border:     #1E3460;
+      --md-sym:     #3A5285;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: var(--sans); line-height: 1.7; }
+
+    .nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      backdrop-filter: blur(16px); background: rgba(12,21,38,.9);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between; height: 62px;
+    }
+    .nav-logo { text-decoration: none; color: var(--white); font-weight: 700; font-size: 15px; }
+    .nav-back { font-family: var(--mono); font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-back:hover { color: var(--accent); }
+
+    .hero-legal {
+      padding: 120px 28px 20px;
+      max-width: 900px; margin: 0 auto;
+    }
+    .legal-eyebrow { font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .legal-title { font-size: clamp(36px, 6vw, 64px); font-weight: 900; letter-spacing: -2px; line-height: 1; }
+    .legal-title .hash { color: var(--md-sym); font-family: var(--mono); font-weight: 500; margin-right: 8px; font-size: .6em; vertical-align: .1em; }
+    .md-hr { font-family: var(--mono); color: var(--border); letter-spacing: 8px; font-size: 14px; padding: 24px 0 8px; }
+
+    .legal-body { max-width: 900px; margin: 0 auto; padding: 8px 28px 80px; }
+    .legal-section { margin-bottom: 48px; }
+    .legal-section h2 {
+      font-family: var(--mono); font-size: 13px; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .legal-section h2::before { content: '##'; color: var(--md-sym); }
+    .legal-section h3 {
+      font-size: 14px; font-weight: 700; color: var(--white);
+      margin: 24px 0 8px; font-family: var(--mono);
+    }
+    .legal-section h3::before { content: '### '; color: var(--md-sym); font-weight: 400; }
+    .legal-section p { color: var(--muted); font-size: 15px; margin-bottom: 10px; line-height: 1.8; }
+    .legal-section a { color: var(--accent); text-decoration: none; }
+    .legal-section a:hover { text-decoration: underline; }
+    .legal-section ul { list-style: none; padding: 0; }
+    .legal-section ul li { color: var(--muted); font-size: 15px; padding: 4px 0 4px 22px; position: relative; }
+    .legal-section ul li::before { content: '-'; position: absolute; left: 6px; color: var(--accent); font-family: var(--mono); }
+
+    .highlight-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--blue);
+      border-radius: 8px; padding: 18px 22px;
+      margin: 16px 0; font-size: 14px; color: var(--muted); line-height: 1.8;
+    }
+    .highlight-box strong { color: var(--white); }
+
+    .info-block {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 22px 26px;
+      font-family: var(--mono); font-size: 14px; line-height: 2; color: var(--white);
+    }
+    .info-block span { color: var(--muted); display: inline-block; min-width: 120px; }
+
+    footer { border-top: 1px solid var(--border); }
+    .footer-inner {
+      max-width: 900px; margin: 0 auto; padding: 28px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-left { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .footer-links { display: flex; gap: 16px; }
+    .footer-links a { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-links a.active { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">MarkdownTool</a>
+    <a href="index.html" class="nav-back">← Zurück zur Startseite</a>
+  </div>
+</nav>
+
+<div class="hero-legal">
+  <div class="legal-eyebrow">// rechtliches</div>
+  <h1 class="legal-title"><span class="hash">#</span>Datenschutz&shy;erklärung</h1>
+  <div class="md-hr">---</div>
+</div>
+
+<div class="legal-body">
+
+  <div class="legal-section">
+    <h2>1. Datenschutz auf einen Blick</h2>
+
+    <div class="highlight-box">
+      <strong>MarkdownTool ist eine lokale macOS-App.</strong> Sie überträgt keine Daten ins Internet, speichert keine persönlichen Daten auf Servern und verwendet keine Telemetrie oder Analytics. Alle Dateien verbleiben ausschliesslich auf Ihrem Gerät.
+    </div>
+
+    <h3>Allgemeine Hinweise</h3>
+    <p>Die folgenden Hinweise geben einen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.</p>
+
+    <h3>Datenerfassung auf dieser Website</h3>
+    <p>Diese Website wird als statische Seite über Vercel bereitgestellt. Beim Besuch werden durch den Hosting-Anbieter technische Zugriffsdaten (IP-Adresse, Zeitstempel, Browser) protokolliert. Diese Daten werden nicht von uns ausgewertet.</p>
+    <p>Wir selbst betreiben kein Tracking, keine Analyse-Tools und keine Cookies auf dieser Website.</p>
+
+    <h3>Ihre Rechte</h3>
+    <p>Sie haben jederzeit das Recht auf Auskunft, Berichtigung und Löschung Ihrer personenbezogenen Daten. Wenden Sie sich dazu an: <a href="mailto:hello@twenty5ai.com">hello@twenty5ai.com</a></p>
+  </div>
+
+  <div class="legal-section">
+    <h2>2. Hosting</h2>
+    <h3>Vercel (Statisches Hosting)</h3>
+    <p>Diese Website wird über Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA gehostet. Beim Aufruf der Seite kann Vercel technische Zugriffsdaten erfassen. Weitere Informationen finden Sie in der <a href="https://vercel.com/legal/privacy-policy" target="_blank">Datenschutzerklärung von Vercel</a>.</p>
+    <p>Das Hosting erfolgt zur fehlerfreien Bereitstellung der Website (Art. 6 Abs. 1 lit. f DSGVO).</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>3. Verantwortliche Stelle</h2>
+    <div class="info-block">
+      <span>Betreiber</span> twenty5ai — Sebastian Oczachowski<br>
+      <span>Adresse</span> Risistrasse 19, 5737 Menziken, Schweiz<br>
+      <span>E-Mail</span> <a href="mailto:hello@twenty5ai.com">hello@twenty5ai.com</a><br>
+      <span>Telefon</span> <a href="tel:+41762035747">+41 76 203 57 47</a>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <h2>4. Die App — keine Datenübertragung</h2>
+    <p>MarkdownTool ist eine native macOS-Applikation, die vollständig lokal auf Ihrem Gerät läuft:</p>
+    <ul>
+      <li>Es werden keine Nutzerdaten an Server übertragen</li>
+      <li>Es findet keine Telemetrie oder Absturzberichterstattung statt</li>
+      <li>Ihre Markdown-Dateien verlassen niemals Ihren Mac</li>
+      <li>Es werden keine Analytics oder Tracking-SDKs verwendet</li>
+      <li>Die App speichert lediglich lokale Einstellungen (zuletzt geöffneter Ordner, zuletzt bearbeitete Dateien) in der macOS UserDefaults — ausschliesslich auf Ihrem Gerät</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>5. Speicherdauer</h2>
+    <p>Lokale Einstellungen der App können jederzeit durch Deinstallation der App oder Löschen der App-Daten entfernt werden. Diese Website speichert keine personenbezogenen Daten in Cookies oder lokalem Speicher.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>6. Betroffenenrechte</h2>
+    <h3>Auskunft, Löschung und Berichtigung</h3>
+    <p>Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht auf unentgeltliche Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger sowie den Zweck der Datenverarbeitung und ggf. ein Recht auf Berichtigung oder Löschung dieser Daten.</p>
+
+    <h3>Widerspruchsrecht</h3>
+    <p>Sie haben das Recht, der Verarbeitung Ihrer personenbezogenen Daten zu widersprechen. Wenden Sie sich hierfür an <a href="mailto:hello@twenty5ai.com">hello@twenty5ai.com</a>.</p>
+
+    <h3>Beschwerderecht</h3>
+    <p>Im Falle von Verstössen gegen die DSGVO steht Ihnen ein Beschwerderecht bei einer Aufsichtsbehörde zu, insbesondere in dem Mitgliedstaat Ihres gewöhnlichen Aufenthalts oder des Orts des mutmaßlichen Verstosses.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>7. SSL-Verschlüsselung</h2>
+    <p>Diese Website nutzt aus Sicherheitsgründen eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie am <code style="font-family:var(--mono);color:var(--accent);font-size:13px">https://</code> in der Adresszeile und dem Schloss-Symbol im Browser.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>8. Open Source</h2>
+    <p>Der vollständige Quellcode von MarkdownTool ist unter der MIT-Lizenz auf GitHub einsehbar und kann jederzeit auf Datenschutzkonformität geprüft werden:</p>
+    <p><a href="https://github.com/bastio89/MarkdownTool" target="_blank">github.com/bastio89/MarkdownTool</a></p>
+    <p style="margin-top:28px; font-family: var(--mono); font-size: 12px; color: var(--muted)">Stand: Juni 2026</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">© 2026 twenty5ai · MarkdownTool</div>
+    <div class="footer-links">
+      <a href="index.html">[ Home ]</a>
+      <a href="impressum.html">[ Impressum ]</a>
+      <a href="datenschutz.html" class="active">[ Datenschutz ]</a>
+      <a href="https://github.com/bastio89/MarkdownTool" target="_blank">[ GitHub ]</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

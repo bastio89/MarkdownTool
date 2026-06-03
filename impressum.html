@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impressum — MarkdownTool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:         #0C1526;
+      --surface:    #142038;
+      --surface2:   #1A2B4A;
+      --blue:       #3B5BDB;
+      --blue-light: #5B7CF7;
+      --accent:     #63B3ED;
+      --white:      #EEF2FF;
+      --muted:      #6D8AB5;
+      --border:     #1E3460;
+      --code-bg:    #070E1C;
+      --md-sym:     #3A5285;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: var(--sans); line-height: 1.7; }
+
+    .nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      backdrop-filter: blur(16px); background: rgba(12,21,38,.9);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between; height: 62px;
+    }
+    .nav-logo { text-decoration: none; color: var(--white); font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+    .nav-back { font-family: var(--mono); font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-back:hover { color: var(--accent); }
+
+    .hero-legal {
+      padding: 120px 28px 20px;
+      max-width: 900px; margin: 0 auto;
+    }
+    .legal-eyebrow {
+      font-family: var(--mono); font-size: 12px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;
+    }
+    .legal-title {
+      font-size: clamp(36px, 6vw, 64px); font-weight: 900;
+      letter-spacing: -2px; line-height: 1;
+    }
+    .legal-title .hash { color: var(--md-sym); font-family: var(--mono); font-weight: 500; margin-right: 8px; font-size: .6em; vertical-align: .1em; }
+    .md-hr { font-family: var(--mono); color: var(--border); letter-spacing: 8px; font-size: 14px; padding: 24px 0 8px; }
+
+    .legal-body {
+      max-width: 900px; margin: 0 auto; padding: 8px 28px 80px;
+    }
+    .legal-section { margin-bottom: 48px; }
+    .legal-section h2 {
+      font-family: var(--mono); font-size: 13px;
+      color: var(--accent); text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 20px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .legal-section h2::before { content: '##'; color: var(--md-sym); }
+    .legal-section p { color: var(--muted); font-size: 15px; margin-bottom: 10px; line-height: 1.8; }
+    .legal-section a { color: var(--accent); text-decoration: none; }
+    .legal-section a:hover { text-decoration: underline; }
+
+    .info-block {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 22px 26px;
+      font-family: var(--mono); font-size: 14px; line-height: 2;
+      color: var(--white);
+    }
+    .info-block span { color: var(--muted); display: inline-block; min-width: 100px; }
+
+    footer { border-top: 1px solid var(--border); }
+    .footer-inner {
+      max-width: 900px; margin: 0 auto; padding: 28px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-left { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .footer-links { display: flex; gap: 16px; }
+    .footer-links a { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-links a.active { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">MarkdownTool</a>
+    <a href="index.html" class="nav-back">← Zurück zur Startseite</a>
+  </div>
+</nav>
+
+<div class="hero-legal">
+  <div class="legal-eyebrow">// rechtliches</div>
+  <h1 class="legal-title"><span class="hash">#</span>Impressum</h1>
+  <div class="md-hr">---</div>
+</div>
+
+<div class="legal-body">
+
+  <div class="legal-section">
+    <h2>Anbieter</h2>
+    <div class="info-block">
+      twenty5ai<br>
+      Sebastian Oczachowski<br>
+      Risistrasse 19<br>
+      5737 Menziken<br>
+      Schweiz
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <h2>Kontakt</h2>
+    <div class="info-block">
+      <span>Telefon</span> <a href="tel:+41762035747">+41 76 203 57 47</a><br>
+      <span>E-Mail</span> <a href="mailto:hello@twenty5ai.com">hello@twenty5ai.com</a><br>
+      <span>Website</span> <a href="https://www.twenty5ai.com" target="_blank">www.twenty5ai.com</a><br>
+      <span>GitHub</span> <a href="https://github.com/bastio89/MarkdownTool" target="_blank">github.com/bastio89/MarkdownTool</a>
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <h2>Inhaber</h2>
+    <p>Inhaber: Sebastian Oczachowski (Einzelunternehmen, nicht im Handelsregister eingetragen)</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Verantwortlich für den Inhalt</h2>
+    <p>Verantwortlich für den Inhalt gemäss Art. 18 Abs. 2 DSG (Schweiz) bzw. § 18 Abs. 2 MStV (Deutschland):</p>
+    <div class="info-block">
+      Sebastian Oczachowski<br>
+      Risistrasse 19<br>
+      5737 Menziken, Schweiz
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <h2>Anwendbares Recht</h2>
+    <p>Für Nutzer mit Sitz in der Schweiz gelten die Bestimmungen des Schweizerischen Obligationenrechts (OR). Gerichtsstand ist Menziken AG, Schweiz.</p>
+    <p>Für Nutzer mit Sitz in Deutschland oder Österreich gelten ergänzend die Anforderungen des Telemediengesetzes (TMG) und des Medienstaatsvertrags (MStV). Es gilt schweizerisches Recht unter Ausschluss des UN-Kaufrechts.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>EU-Streitschlichtung</h2>
+    <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank">https://ec.europa.eu/consumers/odr</a></p>
+    <p>Unsere E-Mail-Adresse finden Sie oben im Impressum.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Verbraucherstreitbeilegung</h2>
+    <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Haftung für Inhalte</h2>
+    <p>Als Diensteanbieter sind wir gemäss den gesetzlichen Bestimmungen des schweizerischen Obligationenrechts (OR) sowie — soweit anwendbar — nach § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten verantwortlich. Eine Verpflichtung zur Überwachung übermittelter oder gespeicherter fremder Informationen besteht nicht.</p>
+    <p>Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Haftung für Links</h2>
+    <p>Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>Urheberrecht</h2>
+    <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem anwendbaren Urheberrecht (URG in der Schweiz, UrhG in Deutschland und Österreich). Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung ausserhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors.</p>
+    <p>Der Quellcode der App MarkdownTool steht unter der MIT-Lizenz und ist frei verwendbar. Siehe <a href="https://github.com/bastio89/MarkdownTool/blob/main/README.md" target="_blank">GitHub Repository</a>.</p>
+    <p style="margin-top:20px; font-family: var(--mono); font-size: 12px; color: var(--muted)">Stand: Juni 2026</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">© 2026 twenty5ai · MarkdownTool</div>
+    <div class="footer-links">
+      <a href="index.html">[ Home ]</a>
+      <a href="impressum.html" class="active">[ Impressum ]</a>
+      <a href="datenschutz.html">[ Datenschutz ]</a>
+      <a href="https://github.com/bastio89/MarkdownTool" target="_blank">[ GitHub ]</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
