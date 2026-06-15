@@ -59,6 +59,9 @@ struct ContentView: View {
     @State private var currentSearchIndex = 0
     @State private var searchMatches: [NSRange] = []
     @State private var vimModeEnabled = false
+    @State private var showHelp = false
+    @State private var showCommandPalette = false
+    @State private var showQuickOpen = false
 
     var body: some View {
         NavigationSplitView {
@@ -267,6 +270,13 @@ struct ContentView: View {
                     }
                     .help("Backup & Sync Einstellungen")
                     .buttonStyle(.borderless)
+
+                    Button(action: { showHelp = true }) {
+                        Image(systemName: "questionmark.circle")
+                    }
+                    .help("Hilfe anzeigen (⌘?)")
+                    .buttonStyle(.borderless)
+                    .keyboardShortcut("/", modifiers: [.command])
                 }
             }
         }
@@ -281,6 +291,28 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showBackupSettings) {
             BackupSettingsView(backupManager: backupManager, iCloudManager: iCloudManager)
+        }
+        .sheet(isPresented: $showHelp) {
+            HelpView(isPresented: $showHelp)
+        }
+        .sheet(isPresented: $showCommandPalette) {
+            CommandPaletteView(
+                isPresented: $showCommandPalette,
+                onSelect: { command in
+                    executeCommand(command)
+                    showCommandPalette = false
+                }
+            )
+        }
+        .sheet(isPresented: $showQuickOpen) {
+            QuickOpenView(
+                isPresented: $showQuickOpen,
+                files: getAllFiles(),
+                onSelect: { item in
+                    openFile(item.url)
+                    showQuickOpen = false
+                }
+            )
         }
         .fileImporter(isPresented: $showFolderPicker, allowedContentTypes: [.folder]) { result in
             switch result {
@@ -440,6 +472,79 @@ extension ContentView {
             performSearch(in: text)
         } catch {
             // Invalid regex
+        }
+    }
+
+    private func getAllFiles() -> [FileItem] {
+        return fileManager.files.map { file in
+            FileItem(name: file.lastPathComponent, path: file.path, url: file)
+        }
+    }
+
+    private func openFile(_ url: URL) {
+        if let content = fileManager.readFileContent(url) {
+            tabManager.openFile(url, content: content)
+            editorModel.loadFileContent(content, fileName: url.deletingPathExtension().lastPathComponent)
+        }
+    }
+
+    private func executeCommand(_ command: CommandPaletteItem) {
+        switch command.id {
+        case "new":
+            tabManager.createNewTab()
+        case "openFolder":
+            showFolderPicker = true
+        case "save":
+            showSaveDialog = true
+        case "template":
+            showTemplatePicker = true
+        case "search":
+            showSearchBar = true
+        case "searchReplace":
+            showSearchBar = true
+            showReplace = true
+        case "quickOpen":
+            showQuickOpen = true
+        case "commandPalette":
+            showCommandPalette = true
+        case "theme":
+            showThemePicker = true
+        case "backup":
+            showBackupSettings = true
+        case "export":
+            showExportSettings = true
+        case "statistics":
+            // Statistics handled by status bar
+            break
+        case "snippets":
+            // Snippets handled via Command Palette
+            break
+        case "linter":
+            // Linter results shown in editor
+            break
+        case "toggleVim":
+            vimModeEnabled.toggle()
+        case "toggleSidebar":
+            // Handled by NavigationSplitView
+            break
+        case "togglePreview":
+            // Handled by split view visibility
+            break
+        case "fontIncrease":
+            editorFontSize += 1
+            previewFontSize += 1
+        case "fontDecrease":
+            editorFontSize = max(10, editorFontSize - 1)
+            previewFontSize = max(10, previewFontSize - 1)
+        case "fontReset":
+            editorFontSize = 14
+            previewFontSize = 14
+        case "toggleHighlight":
+            syntaxHighlighting.toggle()
+        case "help":
+            showHelp = true
+        default:
+            break
         }
     }
 }
