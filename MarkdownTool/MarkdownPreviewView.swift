@@ -1,5 +1,25 @@
 import SwiftUI
 import AppKit
+import Combine
+
+// MARK: - Inline Renderer (accessible to all functions)
+
+private func escapeHTML(_ s: String) -> String {
+    s.replacingOccurrences(of: "&", with: "&amp;")
+     .replacingOccurrences(of: "<", with: "&lt;")
+     .replacingOccurrences(of: ">", with: "&gt;")
+}
+
+private func renderInline(_ s: String) -> String {
+    var r = escapeHTML(s)
+    r = r.replacingOccurrences(of: #"\*\*\*(.+?)\*\*\*"#, with: "<strong><em>$1</em></strong>", options: .regularExpression)
+    r = r.replacingOccurrences(of: #"\*\*(.+?)\*\*"#,     with: "<strong>$1</strong>",        options: .regularExpression)
+    r = r.replacingOccurrences(of: #"\*(.+?)\*"#,         with: "<em>$1</em>",                options: .regularExpression)
+    r = r.replacingOccurrences(of: #"~~(.+?)~~"#,         with: "<del>$1</del>",              options: .regularExpression)
+    r = r.replacingOccurrences(of: #"`(.+?)`"#,           with: "<code>$1</code>",            options: .regularExpression)
+    r = r.replacingOccurrences(of: #"\[(.+?)\]\((.+?)\)"#, with: "<a href=\"$2\">$1</a>",    options: .regularExpression)
+    return r
+}
 
 // MARK: - Markdown → HTML
 
@@ -7,24 +27,6 @@ private func markdownToHTML(_ md: String) -> String {
     var html = ""
     let lines = md.components(separatedBy: "\n")
     var i = 0
-
-    func escapeHTML(_ s: String) -> String {
-        s.replacingOccurrences(of: "&", with: "&amp;")
-         .replacingOccurrences(of: "<", with: "&lt;")
-         .replacingOccurrences(of: ">", with: "&gt;")
-    }
-
-    func renderInline(_ s: String) -> String {
-        var r = escapeHTML(s)
-        // Bold + Italic
-        r = r.replacingOccurrences(of: #"\*\*\*(.+?)\*\*\*"#, with: "<strong><em>$1</em></strong>", options: .regularExpression)
-        r = r.replacingOccurrences(of: #"\*\*(.+?)\*\*"#,     with: "<strong>$1</strong>",        options: .regularExpression)
-        r = r.replacingOccurrences(of: #"\*(.+?)\*"#,         with: "<em>$1</em>",                options: .regularExpression)
-        r = r.replacingOccurrences(of: #"~~(.+?)~~"#,         with: "<del>$1</del>",              options: .regularExpression)
-        r = r.replacingOccurrences(of: #"`(.+?)`"#,           with: "<code>$1</code>",            options: .regularExpression)
-        r = r.replacingOccurrences(of: #"\[(.+?)\]\((.+?)\)"#, with: "<a href=\"$2\">$1</a>",    options: .regularExpression)
-        return r
-    }
 
     while i < lines.count {
         let line = lines[i]
@@ -96,6 +98,27 @@ private func markdownToHTML(_ md: String) -> String {
             continue
         }
 
+        // Tables
+        if trimmed.hasPrefix("|") && trimmed.hasSuffix("|") {
+            var tableRows: [String] = []
+            var isHeader = true
+            while i < lines.count {
+                let l = lines[i].trimmingCharacters(in: .whitespaces)
+                guard l.hasPrefix("|") && l.hasSuffix("|") else { break }
+                if l.contains("---") || l.contains(":---") || l.contains("---:") || l.contains(":---:") {
+                    isHeader = false
+                    i += 1
+                    continue
+                }
+                tableRows.append(l)
+                i += 1
+            }
+            if tableRows.count >= 1 {
+                html += renderTable(rows: tableRows, isFirstRowHeader: isHeader)
+                continue
+            }
+        }
+
         // Empty line
         if trimmed.isEmpty { html += "<br>\n"; i += 1; continue }
 
@@ -106,10 +129,36 @@ private func markdownToHTML(_ md: String) -> String {
     return html
 }
 
+// MARK: - Table Renderer
+
+private func renderTable(rows: [String], isFirstRowHeader: Bool) -> String {
+    guard !rows.isEmpty else { return "" }
+
+    var html = "<table style='border-collapse: collapse; width: 100%; margin: 1em 0;'>\n"
+
+    for (index, row) in rows.enumerated() {
+        let cells = row.split(separator: "|").map { String($0) }.filter { !$0.isEmpty }
+        let tag = (isFirstRowHeader && index == 0) ? "th" : "td"
+        html += "  <tr>\n"
+        for cell in cells {
+            let content = renderInline(cell.trimmingCharacters(in: .whitespaces))
+            let style = (isFirstRowHeader && index == 0) ?
+                "style='border-bottom: 2px solid #e5e5ea; padding: 8px 12px; text-align: left;'" :
+                "style='border-bottom: 1px solid #e5e5ea; padding: 8px 12px; text-align: left;'"
+            html += "    <\(tag) \(style)>\(content)</\(tag)>\n"
+        }
+        html += "  </tr>\n"
+    }
+
+    html += "</table>\n"
+    return html
+}
+
 // MARK: - NSTextView HTML Renderer
 
 struct MarkdownHTMLView: NSViewRepresentable {
     let html: String
+    var fontSize: CGFloat = 14
 
     func makeNSView(context: Context) -> NSScrollView {
         let scrollView = NSTextView.scrollableTextView()
@@ -128,7 +177,7 @@ struct MarkdownHTMLView: NSViewRepresentable {
         <html><head><meta charset="utf-8">
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-                 font-size: 14px; line-height: 1.7; color: #1c1c1e; margin: 0; }
+                 font-size: \(Int(fontSize))px; line-height: 1.7; color: #1c1c1e; margin: 0; }
           h1 { font-size: 1.75em; font-weight: 700; margin: 0.8em 0 0.3em;
                padding-bottom: 0.2em; border-bottom: 1px solid #e5e5ea; }
           h2 { font-size: 1.35em; font-weight: 600; margin: 0.8em 0 0.3em;
@@ -149,6 +198,10 @@ struct MarkdownHTMLView: NSViewRepresentable {
           a  { color: #007aff; }
           del { color: #8e8e93; }
           strong { font-weight: 600; }
+          table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+          th, td { border-bottom: 1px solid #e5e5ea; padding: 8px 12px; text-align: left; }
+          th { border-bottom: 2px solid #e5e5ea; font-weight: 600; }
+          tr:last-child td { border-bottom: none; }
         </style></head>
         <body>\(html)</body></html>
         """
@@ -170,9 +223,45 @@ struct MarkdownHTMLView: NSViewRepresentable {
 
 struct MarkdownPreviewView: View {
     let markdownText: String
+    var fontSize: CGFloat = 14
 
     var body: some View {
-        MarkdownHTMLView(html: markdownToHTML(markdownText))
+        DebouncedMarkdownPreview(markdownText: markdownText, fontSize: fontSize)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+// MARK: - Debounced Preview with Caching
+
+struct DebouncedMarkdownPreview: View {
+    let markdownText: String
+    var fontSize: CGFloat = 14
+
+    @State private var htmlCache: String = ""
+    @State private var lastInputHash: Int = 0
+    @State private var pendingText: String = ""
+    @State private var renderTimer: Timer?
+
+    var body: some View {
+        MarkdownHTMLView(html: htmlCache, fontSize: fontSize)
+            .onAppear {
+                lastInputHash = markdownText.hashValue
+                htmlCache = markdownToHTML(markdownText)
+                pendingText = markdownText
+            }
+            .onChange(of: markdownText) { _, newValue in
+                let hash = newValue.hashValue
+                if hash != lastInputHash {
+                    lastInputHash = hash
+                    pendingText = newValue
+                    renderTimer?.invalidate()
+                    renderTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: false) { _ in
+                        htmlCache = markdownToHTML(pendingText)
+                    }
+                }
+            }
+            .onDisappear {
+                renderTimer?.invalidate()
+            }
     }
 }
